@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from "react";
+import Form from "./components/form/form.js";
+import { uid } from "uid";
 
 function App() {
+  const [activities, setActivities] = useState([]);
+  const nameInputRef = useRef(null);
+
+  const handleAddActivity = (activity, isGoodWeather) => {
+    const newActivity = {
+      id: uid(),
+      activity,
+      isGoodWeather,
+    };
+    setActivities([...activities, newActivity]);
+    console.log(newActivity);
+    nameInputRef.current.focus();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Form onAddActivity={handleAddActivity} nameInputRef={nameInputRef} />
+      <ul>
+        {activities.map(({ id, activity, isGoodWeather }) => (
+          <li key={id}>
+            {activity} - {isGoodWeather ? "Good Weather" : "Bad Weather"}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
